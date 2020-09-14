@@ -36,7 +36,7 @@ app.use(
   )
 );
 
-app.delete('/api/notes/:id', (request, response, next) => {
+app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
     .then(result => {
       response.status(204).end()
@@ -104,7 +104,7 @@ app.post("/api/persons", (request, response) => {
   
 });
 
-const PORT = process.env.PORT;
+const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
