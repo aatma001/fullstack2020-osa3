@@ -36,7 +36,7 @@ app.use(
   )
 );
 
-app.delete('/api/persons/:id', (request, response, next) => {
+app.delete('/api/persons/:id', (request, response) => {
   Person.findByIdAndRemove(request.params.id)
     .then(result => {
       response.status(204).end()
@@ -87,19 +87,8 @@ app.post("/api/persons", (request, response) => {
     response.json(savedPerson.toJSON());
   });
 
-  const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
-  
-    if (error.name === 'CastError') {
-      return response.status(400).send({ error: 'malformatted id' })
-    }
-  
-    next(error)
-  }
 
-  const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
-  }
+
   
   
 });
