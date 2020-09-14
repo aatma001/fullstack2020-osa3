@@ -9,6 +9,9 @@ const mongoose = require('mongoose')
 app.use(express.static("build"));
 app.use(cors());
 app.use(express.json());
+app.use(errorHandler)
+app.use(errorHandler)
+
 
 morgan.token("person", (res) => {
   return JSON.stringify(res.body);
@@ -33,12 +36,13 @@ app.use(
   )
 );
 
-app.delete("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  persons = persons.filter((person) => person.id !== id);
-  console.log("poistetaan");
-  response.json(persons);
-});
+app.delete('/api/notes/:id', (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+})
 
 app.get("/api/persons", (request, response) => {
   console.log("etsitään");
@@ -64,10 +68,6 @@ app.get("/api/persons/:id", (request, response) => {
   }
 });
 
-const generateId = () => {
-  const randomId = Math.floor(Math.random() * Math.floor(10000));
-  return randomId;
-};
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
@@ -86,9 +86,23 @@ app.post("/api/persons", (request, response) => {
   person.save().then((savedPerson) => {
     response.json(savedPerson.toJSON());
   });
-});
 
+  const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
   
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id' })
+    }
+  
+    next(error)
+  }
+
+  const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+  }
+  
+  
+});
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
