@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 require('dotenv').config()
 
-const url = process.env.MONGODB_URI
+const url = 'mongodb+srv://fullstack:fullstack@cluster0.qtdis.mongodb.net/person-app?retryWrites=true&w=majority'
     
 
 console.log('connecting to', url)
