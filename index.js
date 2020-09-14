@@ -9,8 +9,8 @@ const mongoose = require('mongoose')
 app.use(express.static("build"));
 app.use(cors());
 app.use(express.json());
-app.use(errorHandler)
-app.use(errorHandler)
+
+
 
 
 morgan.token("person", (res) => {
