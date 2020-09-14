@@ -4,6 +4,7 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config();
 const Person = require("./models/person");
+const mongoose = require('mongoose')
 
 app.use(express.static("build"));
 app.use(cors());
@@ -86,6 +87,18 @@ app.post("/api/persons", (request, response) => {
     response.json(savedPerson.toJSON());
   });
 });
+
+const url = process.env.MONGODB_URI
+    
+
+console.log('connecting to', url)
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(result => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connecting to MongoDB:', error.message)
+  })
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
