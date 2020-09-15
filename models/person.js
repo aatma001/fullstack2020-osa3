@@ -29,5 +29,6 @@ personSchema.set("toJSON", {
 });
 
 mongoose.set("useFindAndModify", false);
+mongoose.set('useCreateIndex', true);
 
 module.exports = mongoose.model("Person", personSchema);
