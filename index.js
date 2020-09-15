@@ -10,9 +10,6 @@ app.use(express.static("build"));
 app.use(cors());
 app.use(express.json());
 
-
-
-
 morgan.token("person", (res) => {
   return JSON.stringify(res.body);
 });
@@ -36,11 +33,6 @@ app.use(
   )
 );
 
-app.delete('/api/persons/:id', (request, response) => {
-  Person.findByIdAndRemove(request.params.id)
-    .then(result => {
-      response.status(204).end()
-    })
 
 
 app.get("/api/persons", (request, response) => {
