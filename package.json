@@ -8,8 +8,6 @@
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-
-
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aatma001/fullstack-hy-2020-osa3.git"
@@ -25,6 +23,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongoose": "^5.10.5",
+    "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.10.0"
   },
   "devDependencies": {

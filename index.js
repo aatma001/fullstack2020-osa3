@@ -4,7 +4,6 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config();
 const Person = require("./models/person");
-const mongoose = require("mongoose");
 
 app.use(express.static("build"));
 app.use(cors());
@@ -33,31 +32,34 @@ app.use(
   )
 );
 
-app.get("/api/persons", (request, response) => {
+app.get("/api/persons", (req, res) => {
   console.log("etsitään");
-  Person.find({}).then((item) => {
-    response.json(item.map((person) => person.toJSON()));
-  });
+  Person.find({})
+    .then((item) => {
+      res.json(item.map((person) => person.toJSON()));
+    })
+    .catch((error) => next(error));
 });
 
-app.get("/api/persons/info", (req, res) => {
-  res.send(`<div>Phonebook has ${persons.length} names
-                <div>${new Date()}</div>
-            </div>`);
+app.get("/api/persons/:id", (req, res, next) => {
+  Person.findById(req.params.id)
+    .then((person) => {
+      if (person) {
+        res.json(person.toJSON());
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((error) => {
+      next(error);
+    });
 });
 
-app.get("/api/persons/:id", (request, response) => {
-  Person.findById(request.params.id).then((person) => {
-    response.json(person.toJSON());
-  });
-});
-
-app.post("/api/persons", (request, response) => {
-  const body = request.body;
-
-  if (!body.name) {
-    return response.status(400).json({
-      error: "please entessas name and a number",
+app.post("/api/persons", (req, res, next) => {
+  const body = req.body;
+  if (!body.name || !body.number) {
+    return res.status(400).json({
+      error: "please enter name and a number",
     });
   }
 
@@ -66,9 +68,12 @@ app.post("/api/persons", (request, response) => {
     number: body.number,
   });
 
-  person.save().then((savedPerson) => {
-    response.json(savedPerson.toJSON());
-  });
+  person
+    .save()
+    .then((savedPerson) => {
+      res.json(savedPerson.toJSON());
+    })
+    .catch((error) => next(error));
 });
 
 app.delete("/api/persons/:id", (req, res) => {
@@ -80,19 +85,34 @@ app.delete("/api/persons/:id", (req, res) => {
 });
 
 app.put("/api/persons/:id", (req, res, next) => {
-  const body = req.body
-  
+  const body = req.body;
+
   const person = {
     name: body.name,
-    number: body.number
-  }
+    number: body.number,
+  };
 
-  Person.findByIdAndUpdate(req.params.id, person, { new: true,  context: 'query'  })
-  .then(updatedPerson => {
-    res.json(updatedPerson.toJSON())
+  Person.findByIdAndUpdate(req.params.id, person, {
+    new: true,
+    context: "query",
   })
-  .catch(error => next(error))
-})
+    .then((updatedPerson) => {
+      res.json(updatedPerson.toJSON());
+    })
+    .catch((error) => next(error));
+});
+
+app.get("/api/info", (req, res, next) => {
+  console.log("info");
+  Person.countDocuments({})
+    .then((count) => {
+      res.send(
+        `<p>Phonebook has info for ${count} people</p>
+        <p>${new Date().toString()}`
+      );
+    })
+    .catch((error) => next(error));
+});
 
 const errorHandler = (error, req, res, next) => {
   console.log(error.message);
