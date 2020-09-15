@@ -5,7 +5,7 @@ const cors = require("cors");
 require("dotenv").config();
 const Person = require("./models/person");
 const mongoose = require('mongoose');
-const person = require("./models/person");
+
 
 app.use(express.static("build"));
 app.use(cors());
