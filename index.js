@@ -58,12 +58,6 @@ app.get("/api/persons/:id", (request, response) => {
  
 
 
-app.delete("/api/persons/:id", (request, response) =>{
-  Person.findByIdAndRemove(request.params.id)
-  .then(() => {
-    response.status(204).end()
-  })
-})
 
 
 app.post("/api/persons", (request, response) => {
@@ -85,12 +79,14 @@ app.post("/api/persons", (request, response) => {
   });
 });
 
-app.delete('/api/persons/:id', (req, res, next) => {
+app.delete('/api/persons/:id', (req, res) => {
   Person.findByIdAndRemove(req.params.id)
-    .then(() => {
-      res.status(204).end()
-    })
-    .catch(error => next(error))
+  .then(() => {
+    res.send('lol')
+    res.status(204).end()
+    
+  })
+   
 })
 
 const errorHandler = (error, req, res, next) => {
@@ -110,3 +106,4 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
