@@ -59,6 +59,10 @@ app.get("/api/persons/:id", (request, response) => {
   }
 });
 
+app.delete("/api/persons/:id", (request, response) =>{
+  Note.findByIdAndRemove(request.params.id)
+})
+
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
