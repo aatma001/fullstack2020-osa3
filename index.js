@@ -4,7 +4,8 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config();
 const Person = require("./models/person");
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const person = require("./models/person");
 
 app.use(express.static("build"));
 app.use(cors());
@@ -49,18 +50,16 @@ app.get("/api/persons/info", (req, res) => {
 });
 
 app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const person = persons.find((item) => item.id === id);
+    Person.findById(request.params.id)
+      .then(person => {
+          response.json(person.toJSON()) 
+      })
+    })
+ 
 
-  if (person) {
-    response.json(person);
-  } else {
-    response.status(404).end();
-  }
-});
 
 app.delete("/api/persons/:id", (request, response) =>{
-  Note.findByIdAndRemove(request.params.id)
+  Person.findByIdAndRemove(request.params.id)
   .then(result => {
     response.status(204).end()
   })
@@ -87,7 +86,7 @@ app.post("/api/persons", (request, response) => {
   
 });
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
